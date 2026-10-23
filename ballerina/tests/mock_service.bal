@@ -75,7 +75,26 @@ function mockPlaylistItem() returns PlaylistItem => {
     'type: "episode",
     addedAtMs: 1698278400000,
     notes: "Great episode to start with",
-    data: mockEpisode()
+    data: <PlaylistEpisodeData>{
+        id: EPISODE_ID,
+        title: "Building Reliable Distributed Systems",
+        audioLengthSec: 3128,
+        pubDateMs: 1698278400000,
+        podcast: {id: PODCAST_ID, title: "Software Engineering Daily", publisher: "Software Engineering Daily"}
+    }
+};
+
+function mockPodcastPlaylistItem() returns PlaylistItem => {
+    id: 4322,
+    'type: "podcast",
+    addedAtMs: 1698278500000,
+    notes: "Worth subscribing to",
+    data: <PlaylistPodcastData>{
+        id: PODCAST_ID,
+        title: "Software Engineering Daily",
+        publisher: "Software Engineering Daily",
+        totalEpisodes: 2250
+    }
 };
 
 service / on ep0 {
@@ -240,11 +259,11 @@ service / on ep0 {
             description: "A hand-picked list of episodes about building podcasts.",
             visibility: "public",
             'type: "episode_list",
-            total: 1,
+            total: 2,
             totalAudioLengthSec: 3128,
             lastTimestampMs: 1698278400000,
             listennotesUrl: "https://www.listennotes.com/listen/podcasts-about-podcasting-m1pe7z60bsw",
-            items: [mockPlaylistItem()]
+            items: [mockPlaylistItem(), mockPodcastPlaylistItem()]
         };
         return res;
     }

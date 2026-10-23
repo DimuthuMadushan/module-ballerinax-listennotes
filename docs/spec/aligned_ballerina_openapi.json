@@ -4378,6 +4378,25 @@
                 "description": "The published date of the latest episode of this podcast. It is an Epoch Unix timestamp in milliseconds",
                 "example": 1557499770000
             },
+            "PlaylistPodcastData": {
+                "description": "A podcast in a playlist. It always carries its publisher",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/PodcastSimple"
+                    },
+                    {
+                        "required": [
+                            "publisher"
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "publisher": {
+                                "$ref": "#/components/schemas/PublisherField"
+                            }
+                        }
+                    }
+                ]
+            },
             "GetPodcastRecommendationsResponse": {
                 "required": [
                     "recommendations"
@@ -4468,6 +4487,26 @@
                         "x-ballerina-name": "previousPageNumber"
                     }
                 }
+            },
+            "PlaylistCustomAudioData": {
+                "description": "A custom audio item in a playlist. It always carries its audio URL",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/CustomAudio"
+                    },
+                    {
+                        "required": [
+                            "audio"
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "audio": {
+                                "type": "string",
+                                "description": "Audio url, which can be played directly"
+                            }
+                        }
+                    }
+                ]
             },
             "GetEpisodesInBatchResponse": {
                 "required": [
@@ -4702,16 +4741,16 @@
                     "data": {
                         "oneOf": [
                             {
-                                "$ref": "#/components/schemas/EpisodeSimple"
+                                "$ref": "#/components/schemas/PlaylistEpisodeData"
                             },
                             {
-                                "$ref": "#/components/schemas/PodcastSimple"
+                                "$ref": "#/components/schemas/PlaylistPodcastData"
                             },
                             {
-                                "$ref": "#/components/schemas/CustomAudio"
+                                "$ref": "#/components/schemas/PlaylistCustomAudioData"
                             },
                             {
-                                "$ref": "#/components/schemas/DeletedItem"
+                                "$ref": "#/components/schemas/PlaylistDeletedItemData"
                             }
                         ]
                     },
@@ -5459,6 +5498,26 @@
                     }
                 }
             },
+            "PlaylistDeletedItemData": {
+                "description": "A deleted item in a playlist. It always carries its status",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DeletedItem"
+                    },
+                    {
+                        "required": [
+                            "status"
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "type": "string",
+                                "description": "The status of this episode or podcast. For now, the only possible value is **deleted**"
+                            }
+                        }
+                    }
+                ]
+            },
             "GetEpisodesInBatchForm": {
                 "required": [
                     "ids"
@@ -5589,6 +5648,25 @@
                         }
                     }
                 }
+            },
+            "PlaylistEpisodeData": {
+                "description": "An episode in a playlist. It always carries its podcast",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/EpisodeSimple"
+                    },
+                    {
+                        "required": [
+                            "podcast"
+                        ],
+                        "type": "object",
+                        "properties": {
+                            "podcast": {
+                                "$ref": "#/components/schemas/PodcastMinimum"
+                            }
+                        }
+                    }
+                ]
             },
             "PodcastTypeaheadResult": {
                 "type": "object",

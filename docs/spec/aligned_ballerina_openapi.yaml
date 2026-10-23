@@ -3413,6 +3413,16 @@ components:
       description: The published date of the latest episode of this podcast. It is an Epoch Unix timestamp
         in milliseconds
       example: 1557499770000
+    PlaylistPodcastData:
+      description: A podcast in a playlist. It always carries its publisher
+      allOf:
+      - $ref: '#/components/schemas/PodcastSimple'
+      - required:
+        - publisher
+        type: object
+        properties:
+          publisher:
+            $ref: '#/components/schemas/PublisherField'
     GetPodcastRecommendationsResponse:
       required:
       - recommendations
@@ -3481,6 +3491,17 @@ components:
           type: integer
           example: 1
           x-ballerina-name: previousPageNumber
+    PlaylistCustomAudioData:
+      description: A custom audio item in a playlist. It always carries its audio URL
+      allOf:
+      - $ref: '#/components/schemas/CustomAudio'
+      - required:
+        - audio
+        type: object
+        properties:
+          audio:
+            type: string
+            description: Audio url, which can be played directly
     GetEpisodesInBatchResponse:
       required:
       - episodes
@@ -3641,10 +3662,10 @@ components:
           example: This is a good episode.
         data:
           oneOf:
-          - $ref: '#/components/schemas/EpisodeSimple'
-          - $ref: '#/components/schemas/PodcastSimple'
-          - $ref: '#/components/schemas/CustomAudio'
-          - $ref: '#/components/schemas/DeletedItem'
+          - $ref: '#/components/schemas/PlaylistEpisodeData'
+          - $ref: '#/components/schemas/PlaylistPodcastData'
+          - $ref: '#/components/schemas/PlaylistCustomAudioData'
+          - $ref: '#/components/schemas/PlaylistDeletedItemData'
         id:
           type: integer
           description: Playlist item id
@@ -4190,6 +4211,17 @@ components:
             us: United States
             au: Australia
             ua: Ukraine
+    PlaylistDeletedItemData:
+      description: A deleted item in a playlist. It always carries its status
+      allOf:
+      - $ref: '#/components/schemas/DeletedItem'
+      - required:
+        - status
+        type: object
+        properties:
+          status:
+            type: string
+            description: The status of this episode or podcast. For now, the only possible value is **deleted**
     GetEpisodesInBatchForm:
       required:
       - ids
@@ -4286,6 +4318,16 @@ components:
           description: The word in the text query string that is not spelled correctly
           items:
             $ref: '#/components/schemas/SpellCheckResponseTokens'
+    PlaylistEpisodeData:
+      description: An episode in a playlist. It always carries its podcast
+      allOf:
+      - $ref: '#/components/schemas/EpisodeSimple'
+      - required:
+        - podcast
+        type: object
+        properties:
+          podcast:
+            $ref: '#/components/schemas/PodcastMinimum'
     PodcastTypeaheadResult:
       type: object
       properties:

@@ -126,6 +126,18 @@ function testGetPlaylistById() returns error? {
 }
 
 @test:Config {groups: ["mock_tests"]}
+function testPlaylistItemDataTypes() returns error? {
+    if isLiveServer {
+        return;
+    }
+    PlaylistResponse response = check listenNotes->getPlaylistById(TEST_PLAYLIST_ID);
+    PlaylistItem[] items = response.items ?: [];
+    test:assertEquals(items.length(), 2);
+    test:assertTrue(items[0].data is PlaylistEpisodeData);
+    test:assertTrue(items[1].data is PlaylistPodcastData);
+}
+
+@test:Config {groups: ["mock_tests"]}
 function testSubmitPodcast() returns error? {
     if isLiveServer {
         return;

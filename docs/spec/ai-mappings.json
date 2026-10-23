@@ -119,6 +119,10 @@
     "TrendingSearchesResponse": "TrendingSearchesResponse",
     "TypeaheadResponse": "TypeaheadResponse",
     "UpdateFrequencyHoursField": "UpdateFrequencyHoursField",
-    "WebsiteField": "WebsiteField"
+    "WebsiteField": "WebsiteField",
+    "PlaylistCustomAudioData": "PlaylistCustomAudioData",
+    "PlaylistDeletedItemData": "PlaylistDeletedItemData",
+    "PlaylistEpisodeData": "PlaylistEpisodeData",
+    "PlaylistPodcastData": "PlaylistPodcastData"
   }
 }

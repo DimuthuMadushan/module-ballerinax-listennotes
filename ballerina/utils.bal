@@ -64,7 +64,9 @@ isolated function createFormURLEncodedRequestBody(record {|anydata...;|} anyReco
         }
         payload.push("&");
     }
-    _ = payload.pop();
+    if payload.length() > 0 {
+        _ = payload.pop();
+    }
     return string:'join("", ...payload);
 }
 
@@ -89,7 +91,9 @@ isolated function getDeepObjectStyleRequest(string parent, record {} anyRecord) 
         }
         recordArray.push("&");
     }
-    _ = recordArray.pop();
+    if recordArray.length() > 0 {
+        _ = recordArray.pop();
+    }
     return string:'join("", ...recordArray);
 }
 
@@ -112,7 +116,9 @@ isolated function getFormStyleRequest(string parent, record {} anyRecord, boolea
             }
             recordArray.push("&");
         }
-        _ = recordArray.pop();
+        if recordArray.length() > 0 {
+            _ = recordArray.pop();
+        }
     } else {
         foreach [string, anydata] [key, value] in anyRecord.entries() {
             if value is SimpleBasicType {
@@ -124,7 +130,9 @@ isolated function getFormStyleRequest(string parent, record {} anyRecord, boolea
             }
             recordArray.push(",");
         }
-        _ = recordArray.pop();
+        if recordArray.length() > 0 {
+            _ = recordArray.pop();
+        }
     }
     return string:'join("", ...recordArray);
 }
@@ -192,7 +200,9 @@ isolated function getSerializedRecordArray(string parent, record {}[] value, str
             serializedArray.push(getFormStyleRequest(parent, recordItem, explode), ",");
         }
     }
-    _ = serializedArray.pop();
+    if serializedArray.length() > 0 {
+        _ = serializedArray.pop();
+    }
     return string:'join("", ...serializedArray);
 }
 

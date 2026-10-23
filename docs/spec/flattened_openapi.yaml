@@ -50,10 +50,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: type
         in: query
         description: "What type of contents do you want to search for? \n"
@@ -63,11 +63,11 @@ paths:
         schema:
           type: string
           example: episode
+          default: episode
           enum:
           - episode
           - podcast
           - curated
-          default: episode
       - name: offset
         in: query
         description: |
@@ -234,10 +234,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: unique_podcasts
         in: query
         description: |
@@ -248,10 +248,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: interviews_only
         in: query
         description: "Whether or not to keep only podcasts that have guest interviews\
@@ -263,10 +263,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: sponsored_only
         in: query
         description: |
@@ -278,10 +278,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: page_size
         in: query
         description: |
@@ -342,10 +342,10 @@ paths:
         schema:
           type: integer
           example: 1
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: show_genres
         in: query
         description: |
@@ -356,10 +356,10 @@ paths:
         schema:
           type: integer
           example: 1
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       - name: safe_mode
         in: query
         description: |
@@ -370,10 +370,10 @@ paths:
         schema:
           type: integer
           example: 0
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       responses:
         "200":
           description: OK
@@ -445,12 +445,12 @@ paths:
         explode: true
         schema:
           type: string
+          default: listennotes_id
           enum:
           - listennotes_id
           - itunes_id
           - spotify_id
           - rss
-          default: listennotes_id
       responses:
         "200":
           description: OK
@@ -669,13 +669,13 @@ paths:
         explode: true
         schema:
           type: string
+          default: recent_added_first
           enum:
           - recent_added_first
           - oldest_added_first
           - recent_published_first
           - oldest_published_first
           - listen_score
-          default: recent_added_first
         example: listen_score
       - $ref: "#/components/parameters/safeModeParam"
       responses:
@@ -750,10 +750,10 @@ paths:
         explode: true
         schema:
           type: string
+          default: recent_first
           enum:
           - recent_first
           - oldest_first
-          default: recent_first
         example: recent_first
       responses:
         "200":
@@ -1045,10 +1045,10 @@ paths:
         schema:
           type: integer
           example: 1
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
       responses:
         "200":
           description: OK
@@ -1451,12 +1451,12 @@ paths:
         schema:
           type: string
           example: recent_added_first
+          default: recent_added_first
           enum:
           - recent_added_first
           - oldest_added_first
           - recent_published_first
           - oldest_published_first
-          default: recent_added_first
       responses:
         "200":
           description: OK
@@ -1648,12 +1648,12 @@ paths:
         schema:
           type: string
           example: recent_added_first
+          default: recent_added_first
           enum:
           - recent_added_first
           - oldest_added_first
           - name_a_to_z
           - name_z_to_a
-          default: recent_added_first
       - name: page
         in: query
         description: |
@@ -2498,10 +2498,10 @@ components:
           description: |
             Whether or not to fetch up to 15 latest episodes from these podcasts, sorted by pub_date. 1 is yes, and 0 is no.
           example: 1
+          default: 0
           enum:
           - 0
           - 1
-          default: 0
         next_episode_pub_date:
           type: integer
           description: |
@@ -2845,10 +2845,10 @@ components:
           description: The saved default view. Changing it preserves all episodes
             and podcasts in the playlist.
           example: episode_list
+          default: episode_list
           enum:
           - episode_list
           - podcast_list
-          default: episode_list
       additionalProperties: false
     CuratedListFull:
       type: object
@@ -3052,6 +3052,16 @@ components:
       description: The published date of the latest episode of this podcast. It is
         an Epoch Unix timestamp in milliseconds.
       example: 1557499770000
+    PlaylistPodcastData:
+      description: A podcast in a playlist. It always carries its publisher.
+      allOf:
+      - $ref: "#/components/schemas/PodcastSimple"
+      - required:
+        - publisher
+        type: object
+        properties:
+          publisher:
+            $ref: "#/components/schemas/PublisherField"
     GetPodcastRecommendationsResponse:
       required:
       - recommendations
@@ -3112,6 +3122,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PodcastSimple"
+    PlaylistCustomAudioData:
+      description: A custom audio item in a playlist. It always carries its audio
+        URL.
+      allOf:
+      - $ref: "#/components/schemas/CustomAudio"
+      - required:
+        - audio
+        type: object
+        properties:
+          audio:
+            type: string
+            description: "Audio url, which can be played directly."
     GetEpisodesInBatchResponse:
       required:
       - episodes
@@ -3270,10 +3292,10 @@ components:
           example: 1595567004958
         data:
           oneOf:
-          - $ref: "#/components/schemas/EpisodeSimple"
-          - $ref: "#/components/schemas/PodcastSimple"
-          - $ref: "#/components/schemas/CustomAudio"
-          - $ref: "#/components/schemas/DeletedItem"
+          - $ref: "#/components/schemas/PlaylistEpisodeData"
+          - $ref: "#/components/schemas/PlaylistPodcastData"
+          - $ref: "#/components/schemas/PlaylistCustomAudioData"
+          - $ref: "#/components/schemas/PlaylistDeletedItemData"
       description: An item in a playlist
     PodcastTitleOriginalField:
       type: string
@@ -3696,6 +3718,18 @@ components:
             us: United States
             au: Australia
             ua: Ukraine
+    PlaylistDeletedItemData:
+      description: A deleted item in a playlist. It always carries its status.
+      allOf:
+      - $ref: "#/components/schemas/DeletedItem"
+      - required:
+        - status
+        type: object
+        properties:
+          status:
+            type: string
+            description: "The status of this episode or podcast. For now, the only\
+              \ possible value is **deleted**."
     GetEpisodesInBatchForm:
       required:
       - ids
@@ -3788,6 +3822,16 @@ components:
             \ where misspelled tokens are replaced with the correct texts and html\
             \ tags <b><i>"
           example: <b><i>evergrande</i></b> stock
+    PlaylistEpisodeData:
+      description: An episode in a playlist. It always carries its podcast.
+      allOf:
+      - $ref: "#/components/schemas/EpisodeSimple"
+      - required:
+        - podcast
+        type: object
+        properties:
+          podcast:
+            $ref: "#/components/schemas/PodcastMinimum"
     PodcastTypeaheadResult:
       type: object
       properties:
@@ -3924,10 +3968,10 @@ components:
       schema:
         type: integer
         example: 0
+        default: 0
         enum:
         - 0
         - 1
-        default: 0
     genreIdParam:
       name: genre_id
       in: query

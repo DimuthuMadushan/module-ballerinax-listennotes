@@ -3024,10 +3024,52 @@ components:
           example: 1595567004958
         data:
           oneOf:
-            - $ref: '#/components/schemas/EpisodeSimple'
-            - $ref: '#/components/schemas/PodcastSimple'
-            - $ref: '#/components/schemas/CustomAudio'
-            - $ref: '#/components/schemas/DeletedItem'
+            - $ref: '#/components/schemas/PlaylistEpisodeData'
+            - $ref: '#/components/schemas/PlaylistPodcastData'
+            - $ref: '#/components/schemas/PlaylistCustomAudioData'
+            - $ref: '#/components/schemas/PlaylistDeletedItemData'
+    PlaylistEpisodeData:
+      description: An episode in a playlist. It always carries its podcast.
+      allOf:
+        - $ref: '#/components/schemas/EpisodeSimple'
+        - type: object
+          required:
+            - podcast
+          properties:
+            podcast:
+              $ref: '#/components/schemas/PodcastMinimum'
+    PlaylistPodcastData:
+      description: A podcast in a playlist. It always carries its publisher.
+      allOf:
+        - $ref: '#/components/schemas/PodcastSimple'
+        - type: object
+          required:
+            - publisher
+          properties:
+            publisher:
+              $ref: '#/components/schemas/PublisherField'
+    PlaylistCustomAudioData:
+      description: A custom audio item in a playlist. It always carries its audio URL.
+      allOf:
+        - $ref: '#/components/schemas/CustomAudio'
+        - type: object
+          required:
+            - audio
+          properties:
+            audio:
+              type: string
+              description: Audio url, which can be played directly.
+    PlaylistDeletedItemData:
+      description: A deleted item in a playlist. It always carries its status.
+      allOf:
+        - $ref: '#/components/schemas/DeletedItem'
+        - type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              description: The status of this episode or podcast. For now, the only possible value is **deleted**.
     SearchResponse:
       type: object
       properties:

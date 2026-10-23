@@ -11,16 +11,25 @@ configurable int maxEpisodes = 5;
 public function main() returns error? {
     listennotes:Client listenNotes = check new ({xListenAPIKey: apiKey});
 
-    // Step 1: Search for episodes about the topic.
-    listennotes:SearchResponse found = check listenNotes->search(q = topic, 'type = "episode");
+    // Step 1: Search for episodes about the topic, following next_offset until enough are found.
     string[] episodeIds = [];
-    foreach listennotes:SearchResponseResults result in (found.results ?: []) {
-        if result is listennotes:EpisodeSearchResult {
-            string? id = result.id;
-            if id is string && episodeIds.length() < maxEpisodes {
-                episodeIds.push(id);
+    int offset = 0;
+    while episodeIds.length() < maxEpisodes {
+        listennotes:SearchResponse found = check listenNotes->search(q = topic, 'type = "episode", offset = offset);
+        listennotes:SearchResponseResults[] results = found.results ?: [];
+        foreach listennotes:SearchResponseResults result in results {
+            if result is listennotes:EpisodeSearchResult {
+                string? id = result.id;
+                if id is string && episodeIds.length() < maxEpisodes {
+                    episodeIds.push(id);
+                }
             }
         }
+        int? nextOffset = found.nextOffset;
+        if results.length() == 0 || nextOffset is () || nextOffset <= offset {
+            break;
+        }
+        offset = nextOffset;
     }
     if episodeIds.length() == 0 {
         return error(string `No episodes were found for '${topic}'`);

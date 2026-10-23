@@ -766,6 +766,13 @@ public type HasSponsorsField boolean;
 # The published date of the latest episode of this podcast. It is an Epoch Unix timestamp in milliseconds
 public type LatestPubDateMsField int;
 
+# A podcast in a playlist. It always carries its publisher
+public type PlaylistPodcastData record {
+    *PodcastSimple;
+    # Podcast publisher name
+    PublisherField publisher;
+};
+
 public type CreatePlaylistRequest record {|
     # Who can view the playlist. Creation defaults to public
     "public"|"unlisted"|"private" visibility?;
@@ -805,6 +812,13 @@ public type BestPodcastsResponse record {
     BestPodcastsLNUrlField listennotesUrl;
     @jsondata:Name {value: "previous_page_number"}
     int previousPageNumber;
+};
+
+# A custom audio item in a playlist. It always carries its audio URL
+public type PlaylistCustomAudioData record {
+    *CustomAudio;
+    # Audio url, which can be played directly
+    string audio;
 };
 
 public type GetEpisodesInBatchResponse record {
@@ -884,7 +898,7 @@ public type PlaylistItem record {
     int addedAtMs?;
     # Notes for this item
     string notes?;
-    EpisodeSimple|PodcastSimple|CustomAudio|DeletedItem data?;
+    PlaylistEpisodeData|PlaylistPodcastData|PlaylistCustomAudioData|PlaylistDeletedItemData data?;
     # Playlist item id
     int id?;
     # The type of this playlist item.
@@ -1281,6 +1295,13 @@ public type GetEpisodesInBatchForm record {
     string ids;
 };
 
+# A deleted item in a playlist. It always carries its status
+public type PlaylistDeletedItemData record {
+    *DeletedItem;
+    # The status of this episode or podcast. For now, the only possible value is **deleted**
+    string status;
+};
+
 # Curated list name
 public type CuratedNameField string;
 
@@ -1356,6 +1377,12 @@ public type SpellCheckResponse record {
     string correctedTextHtml;
     # The word in the text query string that is not spelled correctly
     SpellCheckResponseTokens[] tokens;
+};
+
+# An episode in a playlist. It always carries its podcast
+public type PlaylistEpisodeData record {
+    *EpisodeSimple;
+    PodcastMinimum podcast;
 };
 
 public type PodcastTypeaheadResult record {
